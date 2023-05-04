@@ -83,7 +83,7 @@ def parse_rss(soup: Tag, url: str, feeds: list[Feed], ttl: int) -> Rss:
 def parse_reply(reply: Tag) -> str:
     """Parse reply from reply tag."""
     author = reply.find('span', {'class': 'tgme_widget_message_author_name'}).decode_contents()
-    text = reply.find('div', {'class': 'tgme_widget_message_text'}).decode_contents()
+    text = reply.find('div', {'class': 'js-message_reply_text'}).decode_contents()
 
     return f"""<div class="rsshub-quote">
         <blockquote>
@@ -142,14 +142,18 @@ def parse_feed(feed_tag: Tag) -> Feed:
     text_content = feed_tag.find('div', {'class': 'js-message_text'})
     description = ''
     if text_content:
-        description = text_content.decode_contents()
+        text_content_inner = text_content.find('div', {'class': 'js-message_text'})
+        if text_content_inner:
+            description = text_content_inner.decode_contents()
+        else:
+            description = text_content.decode_contents()
 
-    image = feed_tag.find('a', {'class': 'tgme_widget_message_photo_wrap'})
-    if image:
+    title = description[:TITLE_LENGTH] or 'No title'
+    images = feed_tag.find_all('a', {'class': 'tgme_widget_message_photo_wrap'})
+    for image in images:
         image_text = parse_image(image)
         description = f'{description}\n{image_text}'
 
-    title = description[:TITLE_LENGTH]
     reply = feed_tag.find('a', {'class': 'tgme_widget_message_reply'})
     preview = feed_tag.find('a', {'class': 'tgme_widget_message_link_preview'})
 
@@ -157,6 +161,13 @@ def parse_feed(feed_tag: Tag) -> Feed:
         description = '{reply_text}\n{description}'.format(
             reply_text=parse_reply(reply),
             description=description,
+        )
+
+    video = feed_tag.find('div', {'class': 'tgme_widget_message_video_wrap'})
+    if video:
+        description = (
+            f'{description}'
+            '\n<p><b>The message contain video, for watch it please visit the channel.</b></p>'
         )
 
     if preview:

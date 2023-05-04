@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tfeed"
-version = "0.1.0"
+version = "0.2.0"
 description = "Library/service for generate RSS feed from public telegram channel without API key."
 authors = ["Mikhail Zhuk <michail.zhuk@pm.me>"]
 readme = "README.md"
