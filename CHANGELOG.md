@@ -10,6 +10,7 @@ Initial release
 ### Added
 - Added support of several images
 - Added message about don't supporting video
+- Unit tests for parse function
 
 ### Fixed
 - Another style of replies in messages

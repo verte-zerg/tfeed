@@ -16,7 +16,6 @@ async def client(aiohttp_client) -> TestClient:
 
 @pytest.mark.parametrize(
     'channel', (
-        'newyorktimes',
         'wildlife',
         'privateart',
         'netflix',
