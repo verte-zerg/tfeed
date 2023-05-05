@@ -1,5 +1,13 @@
 # Change Log
 
+## [0.2.1] - 2022-05-05
+
+## Technical
+- Migration to ruff linter
+- Added github actions for linting
+- Increase minimal version of python to 3.10
+- Specified version of beautifulsoup4 and aiohttp
+
 ## [0.2.0] - 2022-05-04
 
 ### Added

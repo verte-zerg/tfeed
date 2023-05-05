@@ -1,25 +1,26 @@
 [tool.poetry]
 name = "tfeed"
-version = "0.2.0"
+version = "0.2.1"
 description = "Library/service for generate RSS feed from public telegram channel without API key."
 authors = ["Mikhail Zhuk <michail.zhuk@pm.me>"]
 readme = "README.md"
 packages = [{include = "tfeed"}]
 
 [tool.poetry.dependencies]
-python = "^3.9"
-aiohttp = "^3.8"
-beautifulsoup4 = "^4.12"
+python = "^3.10"
+aiohttp = "^3.8.4"
+beautifulsoup4 = "^4.12.2"
 jinja2 = "^3.1.2"
 
-
 [tool.poetry.group.dev.dependencies]
+# testing
 pytest = "^7.3.1"
 pytest-asyncio = "^0.21.0"
-isort = "^5.12.0"
-wemake-python-styleguide = "0.17.0"
-mypy = "^1.2.0"
 pytest-aiohttp = "^1.0.4"
+
+# linting
+mypy = "^1.2.0"
+ruff = "^0.0.264"
 
 [build-system]
 requires = ["poetry-core"]

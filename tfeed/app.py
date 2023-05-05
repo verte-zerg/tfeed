@@ -6,6 +6,7 @@ from functools import cache
 from pathlib import Path
 from typing import NamedTuple
 from urllib.parse import urljoin
+from zoneinfo import ZoneInfo
 
 from aiohttp import ClientSession, web
 from bs4 import BeautifulSoup, Tag
@@ -59,7 +60,7 @@ async def get_channel_content(url: str) -> str:
     async with ClientSession() as session:
         async with session.get(url) as response:
             if response.status != http.HTTPStatus.OK:
-                raise web.HTTPNotFound()
+                raise web.HTTPNotFound
             return await response.text()
 
 
@@ -74,7 +75,7 @@ def parse_rss(soup: Tag, url: str, feeds: list[Feed], ttl: int) -> Rss:
         title=soup.find('meta', {'property': 'og:title'})['content'],
         description=soup.find('meta', {'property': 'og:description'})['content'],
         link=url.replace('t.me/s/', 't.me/'),
-        last_build_date=datetime.now().strftime('%a, %d %b %Y %H:%M:%S %z'),
+        last_build_date=datetime.now(tz=ZoneInfo('UTC')).strftime('%a, %d %b %Y %H:%M:%S %z'),
         ttl=ttl,
         feeds=feeds,
     )
@@ -220,7 +221,7 @@ async def get_rss_feed(channel: str, config: Config) -> str:
     return render_rss(rss)
 
 
-async def handler(request: web.Request) -> web.Response:  # noqa: WPS110, service has one handler
+async def handler(request: web.Request) -> web.Response:
     """Get feed from telegram channel."""
     channel: str = request.match_info['channel']
     config: Config = request.app['config']
@@ -236,7 +237,7 @@ def parse_args() -> Config:
         description='Get RSS feed from public telegram channel without API key.',
     )
     parser.add_argument('--host', default='localhost', help='Host')
-    parser.add_argument('--port', default=80, type=int, help='Port')  # noqa: WPS432, it's port
+    parser.add_argument('--port', default=80, type=int, help='Port')
     parser.add_argument('--ttl', default=1, type=int, help='Cache TTL (in minutes)')
     args = parser.parse_args()
     return Config(host=args.host, port=args.port, ttl=args.ttl)
