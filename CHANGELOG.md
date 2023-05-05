@@ -1,10 +1,5 @@
 # Change Log
 
-## [0.1.0] - 2022-02-13
-
-Initial release
-
-
 ## [0.2.0] - 2022-05-04
 
 ### Added
@@ -15,3 +10,7 @@ Initial release
 ### Fixed
 - Another style of replies in messages
 - Inner message in message
+
+## [0.1.0] - 2022-02-13
+
+Initial release
