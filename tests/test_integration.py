@@ -6,8 +6,8 @@ from aiohttp.test_utils import TestClient
 from tfeed.app import Config, create_app
 
 
-@pytest.fixture
-async def client(aiohttp_client) -> TestClient:
+@pytest.fixture()
+async def client(aiohttp_client: TestClient) -> TestClient:
     """Create test client."""
     config = Config(host='localhost', port=0, ttl=1)
     app = create_app(config)
@@ -15,7 +15,7 @@ async def client(aiohttp_client) -> TestClient:
 
 
 @pytest.mark.parametrize(
-    'channel', (
+    'channel', [
         'wildlife',
         'privateart',
         'netflix',
@@ -27,7 +27,7 @@ async def client(aiohttp_client) -> TestClient:
         'memes',
         'askmenow',
         'dailychannels',
-    ),
+    ],
 )
 async def test_handler(client: TestClient, channel: str) -> None:
     """Test handler."""

@@ -64,7 +64,7 @@ def generate_reply(
     return reply_text, reply_feed
 
 
-def generate_test(
+def generate_test(  # noqa: PLR0913, too many arguments, but it's ok for test
     description: str,
     pub_date: str,
     link: str,
@@ -80,27 +80,36 @@ def generate_test(
     images = images or []
     title = description[:TITLE_LENGTH]
 
-    image_text = ''.join((
+    image_text = ''.join(
         f'<a class="tgme_widget_message_photo_wrap" style="background-image:url(\'{image}\')"></a>'
         for image in images
-    ))
+    )
 
-    image_feed = '\n'.join((
+    image_feed = '\n'.join(
         f'<img src="{image}" referrerpolicy="no-referrer">'
         for image in images
-    ))
+    )
 
     video_text = ''
     video_feed = ''
     if video:
         video_text = f"""
-            <a class="tgme_widget_message_video_player js-message_video_player" href="https://t.me/channel/0"><i class="tgme_widget_message_video_thumb" style="background-image:url('https://cdn4.telegram-cdn.org/file/preview_image')"></i>
+            <a
+                class="tgme_widget_message_video_player js-message_video_player"
+                href="https://t.me/channel/0"><i class="tgme_widget_message_video_thumb"
+                style="background-image:url('https://cdn4.telegram-cdn.org/file/preview_image')
+            "></i>
             <div class="tgme_widget_message_video_wrap">
-                <video src="https://cdn4.telegram-cdn.org/file/{video}.mp4?token=token" class="tgme_widget_message_video js-message_video"></video>
+                <video
+                    src="https://cdn4.telegram-cdn.org/file/{video}.mp4?token=token"
+                    class="tgme_widget_message_video js-message_video"
+                ></video>
             </div>
             </a>
         """
-        video_feed = '\n<p><b>The message contain video, for watch it please visit the channel.</b></p>'
+        video_feed = (
+            '\n<p><b>The message contain video, for watch it please visit the channel.</b></p>'
+        )
 
     raw_feed = f"""
         <div class="tgme_widget_message_wrap js-widget_message_wrap">
@@ -151,7 +160,7 @@ def generate_test(
     return raw_feed, feed
 
 
-def test_parse_simple_feed():
+def test_parse_simple_feed() -> None:
     """Test parse_feed."""
     feed_raw, feed = generate_test(
         description='Test description',
@@ -164,12 +173,12 @@ def test_parse_simple_feed():
 
 
 @pytest.mark.parametrize(
-    'images', (
+    'images', [
         [],
         ['image_0'],
         ['image_0', 'image_1'],
         ['image_0', 'image_1', 'image_2'],
-    ),
+    ],
 )
 def test_parse_feed_with_image(images: list[str]) -> None:
     """Test parse_feed."""
@@ -203,12 +212,12 @@ def test_parse_feed_with_reply() -> None:
 
 
 @pytest.mark.parametrize(
-    'image,title', (
+    ('image','title'), [
         ('image_0', 'Test preview title'),
         (None, 'Test preview title'),
         ('image_0', None),
         (None, None),
-    ),
+    ],
 )
 def test_parse_feed_with_preview(title: str | None, image: str | None) -> None:
     """Test parse_feed."""
